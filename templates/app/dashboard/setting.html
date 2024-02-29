@@ -1,0 +1,40 @@
+{% extends 'app/dashboard/base.html' %} {% block content %}
+
+
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/app/setting.css') }}">
+
+<div class="header-dashboard">
+    <h1>الاعدادات</h1>
+</div>
+<section class="my-settings">
+    <div class="account-photo" style="margin-top: -50px;">
+        {% if user.profile_img%}
+        <img src="{{user.profile_img}}" alt=""> {%else%}
+        <img src="https://cdn-icons-png.flaticon.com/512/6596/6596121.png" alt="">{% endif %}
+    </div>
+    <div class="account-name">
+        <h3>{{user.name}}</h3>
+
+
+    </div>
+    <div class="account-category">
+        <h3>
+            {{ user.academic_section }}</h3>
+
+
+    </div>
+    <p><strong>الايميل :</strong>{{ user.email }}</p>
+    <p><strong>السن :</strong>{{user.age}}<strong> - تايخ الميلاد : </strong>{{ user.birthdate }}</p>
+    <p><strong>رقم الطالب :</strong>{{user.phone_number}}</p>
+    <p><strong>رقم ولي الامر: </strong>{{user.father_number}}</p>
+    <p><strong>تاريخ انشاء الحساب :</strong>{{user.created_at}}</p>
+    <a class='edit' href="">تعديل معلومات الحساب</a>
+
+    <a class='delete' href="/logout" style="background-color: rgb(255, 188, 88);">تسجيل الخروج</a>
+    <button class="delete">حذف الحساب</button>
+</section>
+
+
+{% endblock %}

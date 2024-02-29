@@ -1,0 +1,87 @@
+{% extends 'web/dashboard/base.html' %} {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/web/c-info.css') }}" />
+<div class="main-cover">
+    <img src="{{Course_info.banner_url }}" alt="" />
+</div>
+<div class="main-info">
+    <h1>{{ Course_info.name }}</h1>
+    <p>{{ Course_info.description }}</p>
+</div>
+<div class="main-lable">
+    <div class="circle"></div>
+    <h3>محتويات الكورس</h3>
+</div>
+
+<ul class="accordion-menu">
+    {% for L in Lessons%} {% if L.Ltype == 'section' and loop.index == 1 %}
+    <li class="link">
+        <div class="dropdown">
+            <h3>{{ L.name }}</h3>
+            <img src="https://raw.githubusercontent.com/MaMasoud/platforms-course-manasty/master/asseds/icons/ep_arrow-up-bold.svg" class="arrow" alt="" />
+        </div>
+        <ul class="submenuItems">
+            {% elif L.Ltype == 'section' and loop.index >= 2 %}
+        </ul>
+    </li>
+
+    <li class="link">
+        <div class="dropdown">
+            <h3>{{ L.name }}</h3>
+            <img src="https://raw.githubusercontent.com/MaMasoud/platforms-course-manasty/master/asseds/icons/ep_arrow-up-bold.svg" class="arrow" alt="" />
+        </div>
+        <ul class="submenuItems">
+            {% endif %} {% if L.Ltype == 'video' %}
+            <li>
+                <a href="#">
+                    <div class="info">
+                        <img src="https://raw.githubusercontent.com/MaMasoud/platforms-course-manasty/master/asseds/icons/tabler_video.svg" alt="" /> {{ L.name }}
+                    </div>
+                    <h5>ساعة و 30 ديقية</h5>
+                </a>
+            </li>
+            {% elif L.Ltype == 'exam' %}
+            <li>
+                <a href="#">
+                    <div class="info">
+                        <img src="https://raw.githubusercontent.com/MaMasoud/platforms-course-manasty/master/asseds/icons/quill_paper.svg" alt="" />{{ L.name }}
+                    </div>
+                    <h5>ساعة</h5>
+                </a>
+            </li>
+            {% elif L.Ltype == 'file' %}
+            <li>
+                <a href="#">
+                    <div class="info">
+                        <img src="https://raw.githubusercontent.com/MaMasoud/platforms-course-manasty/master/asseds/icons/material-symbols_download.svg" alt="" /> {{ L.name }}
+                    </div>
+                    <h5>ساعة</h5>
+                </a>
+            </li>
+            {% endif %} {% endfor %}
+        </ul>
+    </li>
+</ul>
+
+<div class="buy-course">
+    {% if states %}
+    <a href="/playvideo/{{lid.id}}">اكمل التعلم</a> {% else %}
+    <a href="/payc/{{Course_info.id}}">اشتري الكورس دلوقتي</a> {% endif %}
+</div>
+
+<script>
+    let listElements = document.querySelectorAll(".link");
+
+    listElements.forEach((listElement) => {
+        listElement.addEventListener("click", () => {
+            if (listElement.classList.contains("active")) {
+                listElement.classList.remove("active");
+            } else {
+                listElements.forEach((listE) => {
+                    listE.classList.remove("active");
+                });
+                listElement.classList.toggle("active");
+            }
+        });
+    });
+</script>
+{% endblock %}

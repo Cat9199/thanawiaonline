@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرئيسية</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/web/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/web/dashboard.css') }}">
+</head>
+
+<body dir="rtl">
+    <header>
+        <nav>
+            <div class="logo">
+
+
+                <img style=" height: 50px" src="{{ url_for('static',filename='img/logowe.png') }}" />
+                <h3> ثانوية اونلاين </h3>
+            </div>
+            <div class="header-info">
+                <div class="account">
+                    <div class="photo">
+                        {% if user.profile_img %}
+                        <img src="{{ user.profile_img }}" /> {% else %}
+                        <img style="width: 40px; height: 40px" src="{{ url_for('static',filename='img/user.png') }}" /> {% endif %}
+                    </div>
+                    <div class="username">
+                        <h5 class="welcome">مساء الخير</h5>
+                        <h5 class="name">{{ user.name }}</h5>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <button class="wallet" onclick="showWallet()">
+                        <img src="{{ url_for('static',filename='/img/icons/solar_wallet-linear.svg')}}" />
+                        <h5>
+
+                            {{user.wallet}} جنيه
+
+                        </h5>
+                    </button>
+                    <div class="wallet-info" id="wallet-info-id">
+                        <h3>إضافة كود جديد</h3>
+                        <div class="add-code">
+                            <div class="codes">
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(1, event)" onpaste="handlePaste(1, event)" />
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(2, event)" onpaste="handlePaste(2, event)" />
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(3, event)" onpaste="handlePaste(3, event)" />
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(4, event)" onpaste="handlePaste(4, event)" /> -
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(5, event)" onpaste="handlePaste(5, event)" />
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(6, event)" onpaste="handlePaste(6, event)" />
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(7, event)" onpaste="handlePaste(7, event)" />
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(8, event)" onpaste="handlePaste(8, event)" /> -
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(9, event)" onpaste="handlePaste(9, event)" />
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(10, event)" onpaste="handlePaste(10, event)" />
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(11, event)" onpaste="handlePaste(11, event)" />
+                                <input type="text" class="otp-input" maxlength="1" oninput="handleInput(12, event)" onpaste="handlePaste(12, event)" />
+                            </div>
+                            <button class="paste-code" onclick="pasteText()">
+                                    <img src="{{ url_for('static',filename='/img/icons/gala_add.svg')}}" alt="">
+                                    <span>
+                                        لصق الكود
+                                    </span>
+                                </button>
+                        </div>
+                        <button class="check">تحقق من الكود</button>
+                    </div>
+                    <a class="notification" href="/notification">
+                        <img src="{{ url_for('static',filename='/img/icons/ph_bell-bold.svg')}}" />
+                        <h5 id="notificationCount">0 </h5>
+                    </a>
+                </div>
+        </nav>
+    </header>
+    <main>
+        <div class="sidebar">
+            <div class="top">
+                <a class="sidebar-item selected" href="/dashboard">
+                    <img src="{{ url_for('static',filename='/img/icons/iconamoon_home.svg')}}" />
+                    <h5>الرئيسية</h5>
+                </a>
+                <a class="sidebar-item" href="/my-courses">
+                    <img src="{{ url_for('static',filename='/img/icons/lets-icons_video.svg')}}" />
+                    <h5>كورساتي</h5>
+                </a>
+                <a class="sidebar-item" href="/q-bank">
+                    <img src="{{ url_for('static',filename='/img/icons/mingcute_question-line.svg')}}" />
+                    <h5>بنك الاسئلة</h5>
+                </a>
+                <a class="sidebar-item" href="/all-courses">
+                    <img src="{{ url_for('static',filename='/img/icons/carbon_course.svg')}}" />
+                    <h5>كل الكورسات</h5>
+                </a>
+                <a class="sidebar-item" href="/revegens">
+                    <img src="{{ url_for('static',filename='/img/icons/mingcute_fast-rewind-line.svg')}}" />
+                    <h5>المراجعات</h5>
+                </a>
+                <a class="sidebar-item" href="/askAi">
+                    <img src="{{ url_for('static',filename='/img/icons/ai.png')}}" />
+                    <h5>اسال الذكاء الاصطناعي</h5>
+                </a>
+            </div>
+            <div class="bottom">
+                <a class="sidebar-item" href="/help">
+                    <img src="{{ url_for('static',filename='/img/icons/bx_support.svg')}}" />
+                    <h5>مساعدة</h5>
+                </a>
+                <a class="sidebar-item" href="/settings">
+                    <img src="{{ url_for('static',filename='/img/icons/carbon_settings.svg')}}" />
+                    <h5>الاعدادات</h5>
+                </a>
+                <a class="sidebar-item" href="/priveci-police">
+                    <img src="{{ url_for('static',filename='/img/icons/iconoir_privacy-policy.svg')}}" />
+                    <h5>الخصوصية والامان</h5>
+                </a>
+                <a class="sidebar-item" href="/logout">
+                    <img src="{{ url_for('static',filename='/img/icons/ci_exit.svg')}}" />
+                    <h5>خروج</h5>
+                </a>
+            </div>
+        </div>
+        <div class="content">
+
+            {% block content%} {% endblock %}
+        </div>
+        <div class="notification-card" id="notification-card-show">
+            <a href="./notification.html">
+                <img src="{{ url_for('static',filename='/img/icons/notification.svg')}}" alt="">
+                <p>عندك رسائل جديدة</p>
+                <audio id="notificationSound" src="{{ url_for('static',filename='/sound/notifications-sound.mp3')}}"></audio>
+            </a>
+        </div>
+    </main>
+
+</body>
+<script>
+    function pasteText() {
+        var apiUrl = "/api/check_code/";
+
+        var otpValues = document.querySelectorAll('.otp-input');
+        var code = "";
+
+        otpValues.forEach(function(input) {
+            code += input.value;
+        });
+
+        fetch(apiUrl + code)
+            .then(response => response.text()) // Get the response as text
+            .then(data => {
+                // Log the raw response
+                console.log('Raw Response:', data);
+
+                // Try to parse the response as JSON
+                try {
+                    var jsonData = JSON.parse(data);
+                    console.log('Parsed JSON:', jsonData);
+
+                    // Check if the response matches the specified condition
+                    if (jsonData.message === 'Code is not used' && jsonData.success === true) {
+                        console.log("The message is: " + jsonData.message);
+                        // You can add further actions or UI updates here
+                    }
+                } catch (e) {
+                    console.error('Error parsing JSON:', e);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // You can call this function when the "تحقق من الكود" button is clicked
+    document.querySelector('.check').addEventListener('click', pasteText);
+</script>
+
+
+<script>
+    function showWallet() {
+
+        let walletInfo = document.getElementById("wallet-info-id");
+        if (walletInfo.style.display == "none" || walletInfo.style.display === "") {
+            walletInfo.style.display = "flex";
+        } else {
+            walletInfo.style.display = "none";
+        }
+    }
+    let userId = "{{ user.id }}";
+    initialNotificationCount = null
+
+    function updateNotification() {
+        fetch(`/api/count_unread_notificashen/${encodeURIComponent(userId)}`)
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.count !== undefined) {
+                    let notification = document.querySelector(".notification h5");
+                    if (initialNotificationCount === null) {
+                        initialNotificationCount = 0;
+                    } else {
+                        if (initialNotificationCount === 0) {
+                            initialNotificationCount = data.count;
+                        } else if (data.count > initialNotificationCount) {
+                            initialNotificationCount = data.count;
+                            console.log("new notification");
+                            showNotification();
+                            playNotificationSound();
+
+                        }
+                    }
+                    notification.innerHTML = data.count;
+                    console.log(data.count);
+                } else {
+                    console.error("Unexpected API response format");
+                }
+            })
+            .catch(error => console.error("Error fetching data:", error));
+    }
+
+    setInterval(updateNotification, 5000);
+
+    function showNotification() {
+        let notification = document.getElementById("notification-card-show");
+        notification.style.left = "20px";
+        setTimeout(function() {
+            notification.style.left = "-300px";
+        }, 3000);
+    }
+
+    function playNotificationSound() {
+        let audio = document.getElementById('notificationSound');
+        audio.play().catch(error => {
+            console.error('Error playing audio:', error);
+        });
+    }
+    async function pasteText() {
+        try {
+            const pastedText = await navigator.clipboard.readText();
+
+            // Distribute pasted text among input fields
+            for (let i = 0; i < pastedText.length && i < 12; i++) {
+                const inputField = document.querySelector(`.otp-input:nth-child(${i + 1})`);
+                if (inputField) {
+                    inputField.value = pastedText[i].replace(/\D/g, '');
+                }
+            }
+        } catch (err) {
+            console.error('Unable to read clipboard text:', err);
+        }
+    }
+
+    function handleInput(index, event) {
+        // Ensure the input value is numeric
+        event.target.value = event.target.value.replace(/\D/g, '');
+
+        // Move to the next input field if available
+        if (event.target.value !== '' && index < 12) {
+            document.querySelector(`.otp-input:nth-child(${index + 1})`).focus();
+        }
+
+        // Move to the previous input field on backspace
+        if (event.inputType === 'deleteContentBackward') {
+            if (index > 1 && event.target.value === '') {
+                document.querySelector(`.otp-input:nth-child(${index - 1})`).focus();
+            } else if (index === 1 && event.target.value === '') {
+                document.querySelector(`.otp-input:nth-child(${index})`).focus();
+            }
+        }
+    }
+
+    function handlePaste(index, event) {
+        // Get the pasted text
+        const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+
+        // Distribute pasted text among input fields
+        for (let i = 0; i < pastedText.length && (index + i) <= 12; i++) {
+            const inputField = document.querySelector(`.otp-input:nth-child(${index + i})`);
+            if (inputField) {
+                inputField.value = pastedText[i].replace(/\D/g, '');
+            }
+        }
+
+    }
+</script>
+
+</html>

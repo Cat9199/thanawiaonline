@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enroll Coreas</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        
+        h2 {
+            color: #333;
+        }
+        
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        select,
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+        }
+        
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        
+        #search-bar {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Enroll Coreas</h2>
+    <form action="/enroll_coreas" method="post">
+        <label for="course">Course</label>
+        <select name="course" id="course">
+            {% for x in all_courses %}
+            <option value="{{x.id}}">{{x.name}}</option>
+            {% endfor %}
+        </select>
+
+        <label for="student">Student</label>
+        <input type="text" id="search-bar" placeholder="Search in the list">
+        <select name="email" id="student">
+            {% for x in users %}
+            <option value="{{x.email}}" data-search="{{x.name}} {{x.email}} {{x.academic_section}}">{{x.name}} - {{x.email}} - {{x.academic_section}}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" value="Enroll">
+    </form>
+
+    <script>
+        var optionsData = Array.from(document.querySelectorAll('#student option')).map(option => ({
+            element: option,
+            text: option.dataset.search.toLowerCase()
+        }));
+
+        document.getElementById('search-bar').addEventListener('input', function() {
+            var searchTerm = this.value.toLowerCase();
+
+            optionsData.forEach(function(optionData) {
+                var containsSearchTerm = optionData.text.includes(searchTerm);
+                optionData.element.style.display = containsSearchTerm ? 'block' : 'none';
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+{% extends 'app/dashboard/base.html' %} {% block content %}
+
+
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/app/qbank.css') }}">
+
+<div class="header-dashboard">
+    <h1>المراجعات</h1>
+</div>
+<section class="q-bank">
+    <img src="{{ url_for('static', filename='img/version-control-animate.svg') }}" alt="">
+    <h1>قريبا تحت التطوير</h1>
+</section>
+
+
+
+{% endblock %}

@@ -1,0 +1,105 @@
+<!-- admin/add_lesson.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Lesson</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #333;
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+        }
+        
+        form {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            text-indent: 1px;
+            text-overflow: '';
+        }
+        
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Add Lesson</h2>
+    <form method="POST" action="/add_lesson">
+        <label for="name">Lesson Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="course_id">Course ID:</label>
+        <select id="course_id" name="course_id" required>
+            {% for course in all_courses %}
+            <option value="{{ course.id }}">{{ course.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="iframeCode">IFrame Code:</label>
+        <textarea id="iframeCode" name="iframeCode" rows="4" required></textarea>
+
+        <label for="Ltype">Lesson Type:</label>
+        <select id="Ltype" name="Ltype">
+            <option value="section">قسم</option>
+            <option value="video">فيديو</option>
+            <option value="exam">اختبار</option>
+        </select>
+
+        <label for="lessonTime">Lesson Time:</label>
+        <input type="text" id="lessonTime" name="lessonTime" required>
+
+        <input type="submit" value="Add Lesson">
+    </form>
+</body>
+
+</html>

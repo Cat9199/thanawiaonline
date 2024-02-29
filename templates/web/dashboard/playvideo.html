@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرئيسية</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/web/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/web/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/web/course-enrolling.css') }}">
+</head>
+
+<body dir="rtl">
+    <header>
+        <nav>
+            <div class="back-button">
+                <a href="/">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M5.29295 1.63605C5.10548 1.82358 5.00017 2.07788 5.00017 2.34305C5.00017 2.60821 5.10548 2.86252 5.29295 3.05005L10.243 8.00005L5.29295 12.95C5.1108 13.1387 5.01 13.3913 5.01228 13.6534C5.01456 13.9156 5.11973 14.1665 5.30514 14.3519C5.49054 14.5373 5.74136 14.6424 6.00355 14.6447C6.26575 14.647 6.51835 14.5462 6.70695 14.364L12.364 8.70705C12.5514 8.51952 12.6567 8.26521 12.6567 8.00005C12.6567 7.73488 12.5514 7.48058 12.364 7.29305L6.70695 1.63605C6.51943 1.44858 6.26512 1.34326 5.99995 1.34326C5.73479 1.34326 5.48048 1.44858 5.29295 1.63605Z" fill="#2E6FF4"/>
+                        </svg>
+                    <h5>الرجوع</h5>
+                </a>
+            </div>
+            <div class="logo">
+                <h3>منصتي</h3>
+                <img style="width: 40px; height: 40px" src="{{ url_for('static',filename='img/logo.png') }}">
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="sidebar">
+            <div class="side-lable">
+                <h3>محتويات الكورس</h3>
+            </div>
+            <ul class="accordion-menu">
+                {% for L in course%} {% if L.Ltype == 'section' and loop.index == 1 %}
+                <li class="link">
+                    <div class="dropdown">
+                        <h3>{{ L.name }}</h3>
+                        <img src="/asseds/icons/ep_arrow-up-bold.svg" class="arrow" alt="">
+                    </div>
+                    <ul class="submenuItems">
+                        {% elif L.Ltype == 'section' and loop.index >= 2 %}
+                    </ul>
+                </li>
+                <li class="link">
+                    <div class="dropdown">
+                        <h3>{{ L.name }}</h3>
+                        <img src="/asseds/icons/ep_arrow-up-bold.svg" class="arrow" alt="">
+                    </div>
+                    <ul class="submenuItems">
+                        {% endif %} {% if L.Ltype != 'section' %}
+                        <li>
+                            <a href="{{L.id}}">
+                                <div class="info">
+                                    <img src="/asseds/icons/tabler_video.svg" alt="">
+                                    <h5>{{ L.name }}</h5>
+                                </div>
+                                <div class="round">
+                                    <input type="checkbox" id="checkbox">
+                                    <label for="checkbox"></label>
+                                </div>
+                            </a>
+                        </li>
+                        {% endif %} {% endfor %}
+                    </ul>
+        </div>
+        <div class="content">
+            <div class="video">
+                {{ lesson.iframeCode | safe }}
+            </div>
+
+            <div class="name-buttons">
+                <h3 class="name">{{ lesson.name }}</h3>
+                <div class="buttons">
+
+                                  {% if back_lesson %}
+                    <a class="btn" href="/playvideo/{{ back_lesson.id }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16" fill="none">
+                    <path d="M5.29295 1.63605C5.10548 1.82358 5.00017 2.07788 5.00017 2.34305C5.00017 2.60821 5.10548 2.86252 5.29295 3.05005L10.243 8.00005L5.29295 12.95C5.1108 13.1387 5.01 13.3913 5.01228 13.6534C5.01456 13.9156 5.11973 14.1665 5.30514 14.3519C5.49054 14.5373 5.74136 14.6424 6.00355 14.6447C6.26575 14.647 6.51835 14.5462 6.70695 14.364L12.364 8.70705C12.5514 8.51952 12.6567 8.26521 12.6567 8.00005C12.6567 7.73488 12.5514 7.48058 12.364 7.29305L6.70695 1.63605C6.51943 1.44858 6.26512 1.34326 5.99995 1.34326C5.73479 1.34326 5.48048 1.44858 5.29295 1.63605Z" fill="#F6F8FC"/>
+                </svg>
+                        <h5>الدرس السابق</h5>
+                    </a>
+                    {% endif %} {% if next_lesson %}
+                    <a class="btn" href="/playvideo/{{ next_lesson.id}}">
+                        <h5>الدرس التالي</h5>
+                        <svg class="next" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16" fill="none">
+                    <path d="M5.29295 1.63605C5.10548 1.82358 5.00017 2.07788 5.00017 2.34305C5.00017 2.60821 5.10548 2.86252 5.29295 3.05005L10.243 8.00005L5.29295 12.95C5.1108 13.1387 5.01 13.3913 5.01228 13.6534C5.01456 13.9156 5.11973 14.1665 5.30514 14.3519C5.49054 14.5373 5.74136 14.6424 6.00355 14.6447C6.26575 14.647 6.51835 14.5462 6.70695 14.364L12.364 8.70705C12.5514 8.51952 12.6567 8.26521 12.6567 8.00005C12.6567 7.73488 12.5514 7.48058 12.364 7.29305L6.70695 1.63605C6.51943 1.44858 6.26512 1.34326 5.99995 1.34326C5.73479 1.34326 5.48048 1.44858 5.29295 1.63605Z" fill="#F6F8FC"/>
+                </svg>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <script>
+        function showWallet() {
+
+            let walletInfo = document.getElementById("wallet-info-id");
+            if (walletInfo.style.display == "none" || walletInfo.style.display === "") {
+                walletInfo.style.display = "flex";
+            } else {
+                walletInfo.style.display = "none";
+            }
+        }
+
+
+
+        function showNotification() {
+            let notification = document.getElementById("notification-card-show");
+            let audio = document.getElementById('notificationSound');
+            audio.play();
+            notification.style.left = "20px";
+            setTimeout(function() {
+                notification.style.left = "-300px";
+            }, 3000);
+        }
+        setTimeout(showNotification, 1000);
+
+
+        function handleInput(index, event) {
+            // Ensure the input value is numeric
+            event.target.value = event.target.value.replace(/\D/g, '');
+
+            // Move to the next input field if available
+            if (event.target.value !== '' && index < 12) {
+                document.querySelector(`.otp-input:nth-child(${index + 1})`).focus();
+            }
+
+            // Move to the previous input field on backspace
+            if (event.inputType === 'deleteContentBackward') {
+                if (index > 1 && event.target.value === '') {
+                    document.querySelector(`.otp-input:nth-child(${index - 1})`).focus();
+                } else if (index === 1 && event.target.value === '') {
+                    document.querySelector(`.otp-input:nth-child(${index})`).focus();
+                }
+            }
+        }
+
+        function handlePaste(index, event) {
+            // Get the pasted text
+            const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+
+            // Distribute pasted text among input fields
+            for (let i = 0; i < pastedText.length && (index + i) <= 12; i++) {
+                const inputField = document.querySelector(`.otp-input:nth-child(${index + i})`);
+                if (inputField) {
+                    inputField.value = pastedText[i].replace(/\D/g, '');
+                }
+            }
+
+        }
+
+
+        async function pasteText() {
+            try {
+                const pastedText = await navigator.clipboard.readText();
+
+                // Distribute pasted text among input fields
+                for (let i = 0; i < pastedText.length && i < 12; i++) {
+                    const inputField = document.querySelector(`.otp-input:nth-child(${i + 1})`);
+                    if (inputField) {
+                        inputField.value = pastedText[i].replace(/\D/g, '');
+                    }
+                }
+            } catch (err) {
+                console.error('Unable to read clipboard text:', err);
+            }
+        }
+
+
+
+
+
+
+
+
+        let listElements = document.querySelectorAll('.link');
+
+        listElements.forEach(listElement => {
+            listElement.addEventListener('click', () => {
+                if (listElement.classList.contains('active')) {
+                    listElement.classList.remove('active');
+                } else {
+                    listElements.forEach(listE => {
+                        listE.classList.remove('active');
+                    })
+                    listElement.classList.toggle('active');
+                }
+            })
+        });
+
+        //block right click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+
+</html>

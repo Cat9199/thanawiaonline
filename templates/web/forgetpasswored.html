@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نسيت كلمت المرور</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/web/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/web/login.css') }}">
+
+</head>
+
+<body dir="rtl">
+    <div class="overlay"></div>
+    <header>
+        <nav>
+            <h3>منصتي</h3>
+            <img style="width: 40px; height: 40px" src="{{ url_for('static',filename='img/logo.png') }}" />
+        </nav>
+    </header>
+    <section class="login-section">
+        <div class="login-container">
+            <h2>اعادت تعين كلمت المرور</h2>
+            <div class="content">
+
+                <form action="/forgetpasswored" method="POST" class="form-login">
+                    <input type="text" name="email" placeholder=" اكتب ايميلك هنا " />
+                    <input type="submit" value="غير كلمت المرور" />
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

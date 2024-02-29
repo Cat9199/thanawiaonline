@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصتي</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/web/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/web/error.css') }}">
+</head>
+
+<body dir="rtl">
+    <div class="overlay"></div>
+    <header>
+        <nav>
+            <h3>منصتي</h3>
+            <img style="width: 40px; height: 40px" src="{{ url_for('static',filename='img/logo.png') }}" />
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            <div class="content">
+                <img src="{{ url_for('static',filename='img/no-data-animate.svg')}}" alt="">
+                <h2>يبدو ان هناك خطا ما</h2>
+                <a href="/">الرجوع للرئيسية</a>
+            </div>
+        </div>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مرحبًا</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/web/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app/landing.css') }}">
+</head>
+
+<body dir="rtl">
+    <div class="overlay element-to-wiggle"></div>
+    <section class="header">
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <h3>ثانوية اونلاين</h3>
+                    <img style="width: 40px; height: 40px" src="{{ url_for('static', filename='img/logo.png')}} " />
+                </div>
+                <span>
+                    <a href="/login">تخطي</a>
+                </span>
+            </nav>
+            <div class="content" id="content-1">
+                <div class="image">
+                    <img src="{{ url_for('static', filename='img/online-learning-animate.svg')}}" alt="">
+                </div>
+                <div class="text">
+                    <h1>ذاكر في اي وقت وأي مكان تحبه</h1>
+                    <p>ذاكر في اي وقت وأي مكان تحبه</p>
+                </div>
+            </div>
+            <div class="content" id="content-2">
+                <div class="image">
+                    <img src="{{ url_for('static', filename='img/learning-animate.svg')}}" alt="">
+                </div>
+                <div class="text">
+                    <h1>ذاكر في اي وقت وأي مكان تحبه</h1>
+                    <p>ذاكر في اي وقت وأي مكان تحبه</p>
+                </div>
+            </div>
+            <div class="content" id="content-3">
+                <div class="image">
+                    <img src="{{ url_for('static', filename='img/media-player-animate.svg')}}" alt="">
+                </div>
+                <div class="text">
+                    <h1>ذاكر في اي وقت وأي مكان تحبه</h1>
+                    <p>ذاكر في اي وقت وأي مكان تحبه</p>
+                </div>
+            </div>
+            <div class="next" id="next-1">
+                <div class="steps">
+                    <div class="step select"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                </div>
+                <button onclick="screen(2)">التالي</button>
+            </div>
+            <div class="next" id="next-2">
+                <div class="steps">
+                    <div class="step"></div>
+                    <div class="step select"></div>
+                    <div class="step"></div>
+                </div>
+                <button onclick="screen(3)">التالي</button>
+            </div>
+            <div class="next" id="next-3">
+                <div class="steps">
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step select"></div>
+                </div>
+                <a href="/login">
+                    <button>أبدأ دلوقتي</button>
+                </a>
+            </div>
+        </div>
+    </section>
+    <script>
+        function screen(screenNum) {
+            if (screenNum == 2) {
+                document.getElementById('content-1').style.display = 'none';
+                document.getElementById('content-2').style.display = 'block';
+                document.getElementById('next-1').style.display = 'none';
+                document.getElementById('next-2').style.display = 'flex';
+            } else if (screenNum == 3) {
+                document.getElementById('content-2').style.display = 'none';
+                document.getElementById('content-3').style.display = 'block';
+                document.getElementById('next-2').style.display = 'none';
+                document.getElementById('next-3').style.display = 'flex';
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,82 @@
+{% extends 'app/dashboard/base.html' %} {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/app/corese_info.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/app/playvideo.css') }}">
+
+<div class="video">
+    {{ lesson.iframeCode | safe }}
+
+</div>
+<div class="video-info">
+    <h1>{{ lesson.name }}</h1>
+    <p>{{ lesson.description }}</p>
+</div>
+<div class="name-buttons">
+    <div class="buttons">
+                          {% if back_lesson %}
+                    <a class="btn" href="/playvideo/{{ back_lesson.id }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16" fill="none">
+                    <path d="M5.29295 1.63605C5.10548 1.82358 5.00017 2.07788 5.00017 2.34305C5.00017 2.60821 5.10548 2.86252 5.29295 3.05005L10.243 8.00005L5.29295 12.95C5.1108 13.1387 5.01 13.3913 5.01228 13.6534C5.01456 13.9156 5.11973 14.1665 5.30514 14.3519C5.49054 14.5373 5.74136 14.6424 6.00355 14.6447C6.26575 14.647 6.51835 14.5462 6.70695 14.364L12.364 8.70705C12.5514 8.51952 12.6567 8.26521 12.6567 8.00005C12.6567 7.73488 12.5514 7.48058 12.364 7.29305L6.70695 1.63605C6.51943 1.44858 6.26512 1.34326 5.99995 1.34326C5.73479 1.34326 5.48048 1.44858 5.29295 1.63605Z" fill="#F6F8FC"/>
+                </svg>
+                        <h5>الدرس السابق</h5>
+                    </a>
+                    {% endif %} {% if next_lesson %}
+                    <a class="btn" href="/playvideo/{{ next_lesson.id}}">
+                        <h5>الدرس التالي</h5>
+                        <svg class="next" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16" fill="none">
+                    <path d="M5.29295 1.63605C5.10548 1.82358 5.00017 2.07788 5.00017 2.34305C5.00017 2.60821 5.10548 2.86252 5.29295 3.05005L10.243 8.00005L5.29295 12.95C5.1108 13.1387 5.01 13.3913 5.01228 13.6534C5.01456 13.9156 5.11973 14.1665 5.30514 14.3519C5.49054 14.5373 5.74136 14.6424 6.00355 14.6447C6.26575 14.647 6.51835 14.5462 6.70695 14.364L12.364 8.70705C12.5514 8.51952 12.6567 8.26521 12.6567 8.00005C12.6567 7.73488 12.5514 7.48058 12.364 7.29305L6.70695 1.63605C6.51943 1.44858 6.26512 1.34326 5.99995 1.34326C5.73479 1.34326 5.48048 1.44858 5.29295 1.63605Z" fill="#F6F8FC"/>
+                </svg>
+                    </a>
+                    {% endif %}    </div>
+
+    <ul class="accordion-menu">
+        {% for L in course%} {% if L.Ltype == 'section' and loop.index == 1 %}
+        <li class="link">
+            <div class="dropdown">
+                <h3>{{ L.name }}</h3>
+                <img src="https://raw.githubusercontent.com/MaMasoud/platforms-course-manasty/master/asseds/icons/ep_arrow-up-bold.svg" class="arrow" alt="" />
+            </div>
+            <ul class="submenuItems">
+                {% elif L.Ltype == 'section' and loop.index >= 2 %}
+            </ul>
+        </li>
+
+        <li class="link">
+            <div class="dropdown">
+                <h3>{{ L.name }}</h3>
+                <img src="https://raw.githubusercontent.com/MaMasoud/platforms-course-manasty/master/asseds/icons/ep_arrow-up-bold.svg" class="arrow" alt="" />
+            </div>
+            <ul class="submenuItems">
+                {% endif %} {% if L.Ltype == 'video' %}
+                <li>
+                    <a href="/playvideo/{{L.id}}">
+                        <div class="info">
+                            <img src="https://raw.githubusercontent.com/MaMasoud/platforms-course-manasty/master/asseds/icons/tabler_video.svg" alt="" /> {{ L.name }}
+                        </div>
+                        <h5>ساعة و 30 ديقية</h5>
+                    </a>
+                </li>
+                {% elif L.Ltype == 'exam' %}
+                <li>
+                    <a href="/playvideo/{{L.id}}">
+                        <div class="info">
+                            <img src="https://raw.githubusercontent.com/MaMasoud/platforms-course-manasty/master/asseds/icons/quill_paper.svg" alt="" />{{ L.name }}
+                        </div>
+                        <h5>ساعة</h5>
+                    </a>
+                </li>
+                {% elif L.Ltype == 'file' %}
+                <li>
+                    <a href="/playvideo/{{L.id}}">
+                        <div class="info">
+                            <img src="https://raw.githubusercontent.com/MaMasoud/platforms-course-manasty/master/asseds/icons/material-symbols_download.svg" alt="" /> {{ L.name }}
+                        </div>
+                        <h5>ساعة</h5>
+                    </a>
+                </li>
+                {% endif %} {% endfor %}
+            </ul>
+        </li>
+    </ul>
+</div>
+
+{% endblock %}

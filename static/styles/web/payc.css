@@ -1,0 +1,88 @@
+.course-details {
+    flex: 1;
+}
+
+.main-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.main-info {
+    text-align: center;
+    margin: 20px;
+}
+
+.main-info h1 {
+    color: #333;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.main-info p {
+    color: #555;
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 15px;
+}
+
+.course-price {
+    color: #2E6FF4;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.purchase-options {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buy-option {
+    margin-bottom: 20px;
+}
+
+.purchase-form {
+    display: flex;
+    align-items: center;
+}
+
+.wallet-input {
+    border: 2px solid #2E6FF4;
+    border-radius: 8px;
+    padding: 12px;
+    margin-right: 10px;
+    font-size: 16px;
+    width: 250px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.wallet-input::placeholder {
+    color: #aaa;
+}
+
+.wallet-input:focus {
+    border-color: #1c4dff;
+}
+
+.buy-button {
+    border-radius: 10px;
+    border: none;
+    background: #2E6FF4;
+    padding: 15px 40px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.buy-button:hover {
+    background: #1c4dff;
+}
