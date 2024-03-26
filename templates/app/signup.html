@@ -2,6 +2,23 @@
 <html lang="ar">
 
 <head>
+    <!-- Hotjar Tracking Code for thanawionline -->
+    <script>
+        (function(h, o, t, j, a, r) {
+            h.hj = h.hj || function() {
+                (h.hj.q = h.hj.q || []).push(arguments)
+            };
+            h._hjSettings = {
+                hjid: 3911671,
+                hjsv: 6
+            };
+            a = o.getElementsByTagName('head')[0];
+            r = o.createElement('script');
+            r.async = 1;
+            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عمل حساب جديد</title>
@@ -23,12 +40,14 @@
             <div class="login-container">
                 <h2>عمل حساب جديد</h2>
                 <div class="content" id="screen1">
+                    {% if session.is_mobile and session.is_webview %} {% else %}
                     <a href="/logingoogle" class="google-login">
                         <h3>تسجيل الدخول باستخدام جوجل</h3>
                         <div class="icon">
                             <img src="{{ url_for('static',filename='img/google-icon.svg') }}" alt="">
                         </div>
                     </a>
+                    {% endif %}
                     <div class="line">
                         <span>او ادخل لحسابك باستخدام</span>
                     </div>
@@ -50,7 +69,8 @@
                         <div class="elsana">
                             <button class="elsana-button elsana-button-selected" type="button" onclick="selectElsana(this, 1)">1ث</button>
                             <button class="elsana-button" type="button" onclick="selectElsana(this, 2)">2ث</button>
-                            <button class="elsana-button" type="button" onclick="selectElsana(this, 3)">3ث</button>
+                            <button class="elsana-button" type="button" onclick="selectElsana(this, 3)">3ث</button> {% if session.is_mobile and session.is_webview %}
+                            <button class="elsana-button" type="button" onclick="selectElsana(this, 4);selectTaqasous(this);setval('4')">هندسة</button> {% endif %}
                         </div>
                         <div class="taqasous" id="taqasous-2">
                             <button class="taqasous-button" type="button" value="2sei" onclick="selectTaqasous(this);setval('2sic');">علمي</button>

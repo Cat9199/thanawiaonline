@@ -1,0 +1,37 @@
+{% extends 'web/dashboard/base.html' %} {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/web/allc.css') }}">
+<div class="header-dashboard">
+    <h1>كل الكورسات</h1>
+    <div class="month-courses">
+        <div class="header-courses">
+            <div class="main-lable">
+                <div class="circle"></div>
+                <h3>{{ category }}</h3>
+            </div>
+
+        </div>
+        <div class="courses">
+            {% for course in courses %}
+            <a class="course" href="/course/{{course.id}}">
+                <div class="img-course">
+                    <img src="{{ course.banner_url }}" alt="">
+                </div>
+
+                <div class="course-info">
+                    <h3>{{ course.name }}</h3>
+                    {% if course.description %}
+                    <p>{{ course.description | truncate(100) }}</p>
+                    {% else %}
+                    <p>لا يوجد وصف للكورس </p>
+                    {% endif %}
+                </div>
+                <div class="course-price">
+                    <div>تفاصيل</div>
+                    <p>السعر {{course.price}} جنية</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+</div> {% endblock %}

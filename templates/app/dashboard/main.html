@@ -23,25 +23,22 @@
     </div>
     <div class="courses">
         {% for c in course_data %}
-        <div class="course">
+        <a class="course" href="/course/{{ c.id }}">
             <div class="img-course">
-                <img src="{{ c.banner_url }}" alt="{{ c.name }}"> </div>
+                <img src="{{ c.banner_url }}" alt="{{ c.name }}">
+            </div>
             <div class="course-info">
 
 
                 <h3>{{ c.name }}</h3>
-{% if c.description %}
-                <p>{{ c.description | truncate(100) }}</p>
-{% else %}
-<p>لا يوجد وصف للكورس</p>           {% endif %} </div>
+            </div>
             <div class="course-price">
-                <a href="/course/{{ c.id }}">أكمل التعلم الان</a>
+                <div>أكمل التعلم الان</div>
                 <!-- <span>120 جنيه</span> -->
             </div>
-        </div>
+        </a>
 
-    </div>
-    {% endfor %}
+        {% endfor %}
     </div>
 </section>
 </div>

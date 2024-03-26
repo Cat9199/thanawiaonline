@@ -14,26 +14,40 @@
         <img src="{{user.profile_img}}" alt=""> {%else%}
         <img src="https://cdn-icons-png.flaticon.com/512/6596/6596121.png" alt="">{% endif %}
     </div>
-    <div class="account-name">
-        <h3>{{user.name}}</h3>
+
+    <div class="info-user" style="margin-top: 20px; background-color: var(--neutral-10, #F6F8FC); padding: 10px; border-radius: 10px;width: 120%;">
+
+        <p style="font-size: 1.2rem; color: #333;"><strong>الاسم :</strong><br>
+            <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;">{{user.name}}</div>
+        </p>
+
+        <p style="font-size: 1.2rem; color: #333;"><strong>القسم :</strong><br>
+            <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;"> {{ user.academic_section }}</div>
+        </p>
 
 
+        <p style="font-size: 1.2rem; color: #333;"><strong>الايميل :</strong><br>
+            <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;">{{ user.email }}</div>
+        </p>
+        <p style="font-size: 1.2rem; color: #333;"><strong>السن :</strong><br>
+            <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;"> {{ user.age }}سنة --{{ user.birthdate }}</div>
+        </p>
+        <p style="font-size: 1.2rem; color: #333;"><strong>رقم الطالب :</strong><br>
+
+            <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%; ">
+                {{ user.phone_number }}
+            </div>
+        </p>
+        <p style="font-size: 1.2rem; color: #333;"><strong>رقم ولي الامر: </strong><br>
+            <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;">{{ user.father_number }}</div>
+        </p>
+        <p style="font-size: 1.2rem; color: #333;"><strong>تاريخ انشاء الحساب :</strong> <br>
+            <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;"> {{ user.created_at }}</div>
+        </p>
     </div>
-    <div class="account-category">
-        <h3>
-            {{ user.academic_section }}</h3>
-
-
-    </div>
-    <p><strong>الايميل :</strong>{{ user.email }}</p>
-    <p><strong>السن :</strong>{{user.age}}<strong> - تايخ الميلاد : </strong>{{ user.birthdate }}</p>
-    <p><strong>رقم الطالب :</strong>{{user.phone_number}}</p>
-    <p><strong>رقم ولي الامر: </strong>{{user.father_number}}</p>
-    <p><strong>تاريخ انشاء الحساب :</strong>{{user.created_at}}</p>
-    <a class='edit' href="">تعديل معلومات الحساب</a>
 
     <a class='delete' href="/logout" style="background-color: rgb(255, 188, 88);">تسجيل الخروج</a>
-    <button class="delete">حذف الحساب</button>
+    <a class="delete" href="/logout">حذف الحساب</a>
 </section>
 
 

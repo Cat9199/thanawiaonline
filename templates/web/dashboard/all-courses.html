@@ -1,39 +1,73 @@
 {% extends 'web/dashboard/base.html' %} {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/web/allc.css') }}">
+<style>
+    .section-trees {
+        padding: 50px 30px;
+    }
+    
+    .section-trees .trees {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+    
+    .section-trees .trees .tree {
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        border-radius: 30px 10px 30px 10px;
+        background: #FFF;
+        box-shadow: 5px 5px 10px 0px rgba(17, 36, 123, 0.30);
+        transition: 0.3s ease-in-out;
+        position: relative;
+    }
+    
+    .section-trees .trees .tree:hover {
+        transform: translateY(-10px);
+        box-shadow: 5px 5px 10px 0px rgba(17, 36, 123, 0.50);
+        opacity: 0.9;
+        filter: saturate(1.5);
+        filter: brightness(1.1);
+    }
+    
+    .section-trees .trees .tree img {
+        width: 100%;
+        border-radius: 30px 10px 30px 10px;
+        overflow: hidden;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        object-fit: cover;
+        filter: brightness(0.5);
+    }
+    
+    .section-trees .trees .tree h3 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--neutral-10, #F6F8FC);
+        font-size: 20px;
+    }
+</style>
 <div class="header-dashboard">
     <h1>كل الكورسات</h1>
-    {% for category in uni %}
-    <div class="month-courses">
-        <div class="header-courses">
-            <div class="main-lable">
-                <div class="circle"></div>
-                <h3>{{ category }}</h3>
-            </div>
 
+    <section class="section-trees">
+        <div class="main-lable">
+            <div class="circle"></div>
+            <h3>التصنيفات</h3>
         </div>
-        <div class="courses">
-            {% for course in courses if course.category == category %}
-            <div class="course">
-                <div class="img-course">
-                    <img src="{{ course.banner_url }}" alt="">
-                </div>
+        <div class="trees">
+            {% for category in uni %}
 
-                <div class="course-info">
-                    <h3>{{ course.name }}</h3>
-                    {% if course.description %}
-                    <p>{{ course.description | truncate(100) }}</p>
-                    {% else %}
-                    <p>لا يوجد وصف للكورس </p>
-                    {% endif %}
-                </div>
-                <div class="course-price">
-                    <a href="course/{{course.id}}">تفاصيل</a>
-                    <p>السعر {{course.price}} جنية</p>
-                </div>
-            </div>
-            {% endfor %}
+            <a class="tree" href="/category/{{category}}">
+                <img src="https://static.helpjuice.com/helpjuice_production/uploads/upload/image/4752/direct/1597678311691-Explicit%20Knowledge.jpg" alt="">
+                <h3>{{category}}</h3>
+            </a>
+            {%endfor%}
         </div>
-    </div>
-    {% endfor %}
-</div>
-{% endblock %}
+    </section>
+    {% endblock %}

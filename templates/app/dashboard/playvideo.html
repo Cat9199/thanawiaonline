@@ -2,31 +2,63 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/app/corese_info.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/app/playvideo.css') }}">
 
+<style>
+    .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 10px 0;
+    }
+</style>
+<!-- Hotjar Tracking Code for thanawionline -->
+<script>
+    (function(h, o, t, j, a, r) {
+        h.hj = h.hj || function() {
+            (h.hj.q = h.hj.q || []).push(arguments)
+        };
+        h._hjSettings = {
+            hjid: 3911671,
+            hjsv: 6
+        };
+        a = o.getElementsByTagName('head')[0];
+        r = o.createElement('script');
+        r.async = 1;
+        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+</script> {% if error =='لقد تجاوزت الحد الاقصي لعدد المرات' %}
+<div class="error">
+    <h3>{{ error }}</h3>
+</div>
+
+
+{% else %}
 <div class="video">
     {{ lesson.iframeCode | safe }}
-
 </div>
+{% endif %}
 <div class="video-info">
     <h1>{{ lesson.name }}</h1>
     <p>{{ lesson.description }}</p>
 </div>
 <div class="name-buttons">
     <div class="buttons">
-                          {% if back_lesson %}
-                    <a class="btn" href="/playvideo/{{ back_lesson.id }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16" fill="none">
+        {% if back_lesson %}
+        <a class="btn" href="/playvideo/{{ back_lesson.id }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16" fill="none">
                     <path d="M5.29295 1.63605C5.10548 1.82358 5.00017 2.07788 5.00017 2.34305C5.00017 2.60821 5.10548 2.86252 5.29295 3.05005L10.243 8.00005L5.29295 12.95C5.1108 13.1387 5.01 13.3913 5.01228 13.6534C5.01456 13.9156 5.11973 14.1665 5.30514 14.3519C5.49054 14.5373 5.74136 14.6424 6.00355 14.6447C6.26575 14.647 6.51835 14.5462 6.70695 14.364L12.364 8.70705C12.5514 8.51952 12.6567 8.26521 12.6567 8.00005C12.6567 7.73488 12.5514 7.48058 12.364 7.29305L6.70695 1.63605C6.51943 1.44858 6.26512 1.34326 5.99995 1.34326C5.73479 1.34326 5.48048 1.44858 5.29295 1.63605Z" fill="#F6F8FC"/>
                 </svg>
-                        <h5>الدرس السابق</h5>
-                    </a>
-                    {% endif %} {% if next_lesson %}
-                    <a class="btn" href="/playvideo/{{ next_lesson.id}}">
-                        <h5>الدرس التالي</h5>
-                        <svg class="next" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16" fill="none">
+            <h5>الدرس السابق</h5>
+        </a>
+        {% endif %} {% if next_lesson %}
+        <a class="btn" href="/playvideo/{{ next_lesson.id}}">
+            <h5>الدرس التالي</h5>
+            <svg class="next" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16" fill="none">
                     <path d="M5.29295 1.63605C5.10548 1.82358 5.00017 2.07788 5.00017 2.34305C5.00017 2.60821 5.10548 2.86252 5.29295 3.05005L10.243 8.00005L5.29295 12.95C5.1108 13.1387 5.01 13.3913 5.01228 13.6534C5.01456 13.9156 5.11973 14.1665 5.30514 14.3519C5.49054 14.5373 5.74136 14.6424 6.00355 14.6447C6.26575 14.647 6.51835 14.5462 6.70695 14.364L12.364 8.70705C12.5514 8.51952 12.6567 8.26521 12.6567 8.00005C12.6567 7.73488 12.5514 7.48058 12.364 7.29305L6.70695 1.63605C6.51943 1.44858 6.26512 1.34326 5.99995 1.34326C5.73479 1.34326 5.48048 1.44858 5.29295 1.63605Z" fill="#F6F8FC"/>
                 </svg>
-                    </a>
-                    {% endif %}    </div>
+        </a>
+        {% endif %} </div>
 
     <ul class="accordion-menu">
         {% for L in course%} {% if L.Ltype == 'section' and loop.index == 1 %}

@@ -4,7 +4,6 @@
 # Total Coding Time: 530 hours
 # Project Start Date: 29th October 2023, 4:53 PM
 # Project End Date: TBD
-
 # ========================== Import lib ==========================
 
 from flask import Flask, redirect, url_for, jsonify , session, request, render_template, Response
@@ -12,10 +11,12 @@ from google.auth.transport import requests
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.sql import func
+from sqlalchemy import distinct
 from models.fpass import send_reset_password_email
 from datetime import datetime as dt, date , timedelta
 from flask_cors import CORS
 import datetime
+import random
 import secrets
 import requests
 import base64
@@ -23,8 +24,6 @@ import os
 import io
 import requests
 import json
-
-
 # ========================== Config ==========================
 global APP_URL
 APP_URL = 'https://scholarsync.e3lanotopia.software/'
@@ -43,8 +42,7 @@ api_key  = 'acc_5096faf3f7807f9'
 api_secret  = 'bf48a14618503e7bed7304ad193a3010'
 migrate = Migrate(app, db)
 CORS(app, resources={r"/*": {"origins": "*"}})
-# ========================== Models =========================
-
+# ========================== Models ==========================
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -209,10 +207,17 @@ class Admin(db.Model):
     email = db.Column(db.String(80), unique=True, nullable=False)
     roule = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    
+class playTimes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(100))
+    lesson = db.Column(db.Integer)
+    play_count = db.Column(db.Integer , default=0)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
 # ========================== Functions ==========================
+import random
 def addPayLog(user,amount,prodect_id,prodect_name):
+
     new_log = Wallet_log(
         user=user,
         Amount=amount,
@@ -221,10 +226,10 @@ def addPayLog(user,amount,prodect_id,prodect_name):
     )
     db.session.add(new_log)
     db.session.commit()
-
 def generate_pay_code():
-    code = secrets.randbelow(99999999999999)
-    return code
+    valid_digits = "23456789"
+    pay_code = ''.join(random.choice(valid_digits) for _ in range(12))
+    return pay_code
 
 def get_user_info(access_token):
     user_info_url = "https://www.googleapis.com/oauth2/v1/userinfo"
@@ -396,29 +401,34 @@ def home():
 
 # ========================== Login and Sign Up ==========================
 
-@app.route('/login',methods = ['POST','GET'])
+from sqlalchemy import or_
+
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
+        identifier = request.form['email']
         password = request.form['password']
-        user = Users.query.filter_by(email=email).first()
-        if user :
+        
+        # Check if the identifier is an email or a phone number
+        user = Users.query.filter(or_(Users.email == identifier, Users.phone_number == identifier,Users.name==identifier)).first()
+        
+        if user:
             if user.password == password:
                 session.permanent = True
-                session['user'] = email
-                addLogin(email)
+                session['user'] = user.email  
+                addLogin(user.email)
                 return redirect('/dashboard')
-            else :
-                return 'sorry'
+            else:
+                    return render_template('app/login.html',error='كلمة المرور خاطئة',username=identifier)
+        else:
+                return render_template('app/login.html',error='البريد الالكتروني او رقم الهاتف غير موجود')
+
     username = session.get('user')
     if username:
         return redirect('/dashboard')
-    else :              
-        if session['is_mobile']:
+    else:              
             return render_template('app/login.html')
-        else:
-            return render_template('web/login.html')
-     
+
 
 @app.route('/sign_up')
 def sign_up():
@@ -426,10 +436,7 @@ def sign_up():
     if username:
         return redirect('/dashboard')
     else :
-        if session['is_mobile']:
             return render_template("app/signup.html")
-        else :
-            return render_template("web/signup.html")
     
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -462,8 +469,12 @@ def signup():
     elif section == '3math':
             section = "الصف الثالث الثانوي علم رياضة"
             academic_year = 3
+    elif section == '4':
+            section = "قسم هندسة"
+            academic_year = 4
     else:
         pass
+
     if gender == 'boy':
         userimg = f"https://avatar.iran.liara.run/public/boy?username={username}"
     else :
@@ -609,7 +620,9 @@ def dashboard():
     
     if username:
         user = Users.query.filter_by(email=username).first()
-
+        if user.password == "GoogleLoginPasswored":
+            if user.academic_year == None:
+                return redirect('/googlesc/'+str(user.id))
         enrollments = Enroll.query.filter_by(user=user.email).all()
         enrollment_ids = [enrollment.course for enrollment in enrollments]
 
@@ -623,21 +636,40 @@ def dashboard():
     else:
         return redirect('/login')
 
+
 @app.route('/all-courses')
 def all_courses():
     username = session.get('user')
     if username:
         user = Users.query.filter_by(email=username).first()
+        
+        # Use distinct to get unique categories directly from the database
+        categories = db.session.query(distinct(Course.category)).filter_by(academic_year=user.academic_year).all()
+        unique_categories = [category[0] for category in categories]
+
         courses = Course.query.filter_by(academic_year=user.academic_year).all()
-        categories_set = set(course.category for course in courses if course.category)
-        unique_categories = list(categories_set)
+        print(unique_categories)
         if session['is_mobile']:
-            return render_template('app/dashboard/all-courses.html',user=user,courses=courses,uni=unique_categories)
-        else:    
-            return render_template('web/dashboard/all-courses.html',user=user,courses=courses,uni=unique_categories)
-    else :
+            return render_template('app/dashboard/all-courses.html', user=user, courses=courses, uni=unique_categories)
+        else:
+            return render_template('web/dashboard/all-courses.html', user=user, courses=courses, uni=unique_categories)
+    else:
         return redirect('/login')
-    
+#path category/:category
+
+@app.route('/category/<category>')
+def category(category):
+    username = session.get('user')
+    if username:
+        user = Users.query.filter_by(email=username).first()
+        courses = Course.query.filter_by(category=category,academic_year=user.academic_year).all()
+        print(courses)
+        if session['is_mobile']:
+            return render_template('app/dashboard/category.html',user=user,courses=courses,category=category)
+        else:
+            return render_template('web/dashboard/category.html',user=user,courses=courses,category=category)
+    else:
+        return redirect('/login')
 @app.route('/my-courses')
 def my_courses():
     username = session.get('user')
@@ -653,13 +685,8 @@ def my_courses():
             return render_template('app/dashboard/my-courses.html', user=user, courses=courses, uni=unique_categories)
         else:
             return render_template('web/dashboard/my-courses.html', user=user, courses=courses, uni=unique_categories)
-        
-
     else :
         return redirect('/login')
-    
-
-
 @app.route("/q-bank")
 def q_bank():
     username = session.get('user')
@@ -852,14 +879,31 @@ def playvideo(id):
         lesson = Lesson.query.get(id)
         next_lesson = Lesson.query.filter_by(course_id=lesson.course_id).filter(Lesson.id > lesson.id).first()
         back_lesson = Lesson.query.filter_by(course_id=lesson.course_id).filter(Lesson.id < lesson.id).first()
+        userPlayTimes = playTimes.query.filter_by(user=user.email,lesson=id).first()
+        all_lessons = Lesson.query.filter_by(course_id=lesson.course_id).all()
+        enroll = Enroll.query.filter_by(user=user.email,course=lesson.course_id).first()
+        if userPlayTimes:
+            if userPlayTimes.play_count >= 3:
+                if session['is_mobile']:
+                    return render_template('app/dashboard/playvideo.html',user=user,lesson=lesson,course=all_lessons,next_lesson=next_lesson,back_lesson=back_lesson,error='لقد تجاوزت الحد الاقصي لعدد المرات')
+                else:
+                    return render_template('web/dashboard/playvideo.html',user=user,lesson=lesson,course=all_lessons,next_lesson=next_lesson,back_lesson=back_lesson,error='لقد تجاوزت الحد الاقصي لعدد المرات')
+            userPlayTimes.play_count += 1
+            db.session.commit()
+        else:
+            newPlayTimes = playTimes(
+                user=user.email,
+                lesson=id,
+                play_count=1
+            )
+            db.session.add(newPlayTimes)
+            db.session.commit()
         if lesson.Ltype == 'section':
-
             next_lesson = Lesson.query.filter_by(course_id=lesson.course_id).filter(Lesson.id > lesson.id).first()
             return redirect(f'/playvideo/{next_lesson.id}')
         else:
             pass
-        all_lessons = Lesson.query.filter_by(course_id=lesson.course_id).all()
-        enroll = Enroll.query.filter_by(user=user.email,course=lesson.course_id).first()
+        
         if enroll:
             lesson.play_count += 1
             db.session.commit()
@@ -878,6 +922,14 @@ def payc(id):
     if username:
         user = Users.query.filter_by(email=username).first()
         course = Course.query.get(id)
+        if course.price == 0:
+            enroll = Enroll(
+                user=user.email,
+                course=course.id
+            )
+            db.session.add(enroll)
+            db.session.commit()
+            return redirect('/course/'+str(id))
         if session['is_mobile']:
             return render_template('app/dashboard/checkout.html',user=user,course=course)
         else :
@@ -1076,10 +1128,15 @@ def init_codes():
 @app.route("/api/th/get_codes_csv/<log_barcode>")
 def get_codes_csv(log_barcode):
     codes = Pay_code.query.filter_by(log_barcode=log_barcode).all()
-    csv = "code,price\n"
+    singelcode = Pay_code.query.filter_by(log_barcode=log_barcode).first()
+    num = 0
+    for x in codes :
+        num+=1
+    csv = "code\n"
     for code in codes:
-        csv += f"{code.code},{code.price}\n"
-    return Response(csv, mimetype='text/csv', headers={"Content-Disposition": f"attachment; filename={log_barcode}.csv"})
+        csv += f"{code.code}\n"
+    filename = f"codes-{num}_price{singelcode.price}L.E - {date.today()}"
+    return Response(csv, mimetype='text/csv', headers={"Content-Disposition": f"attachment; filename={filename}.csv"})
 # aqi for reatern the count of users 
 @app.route("/api/th/get_users_count")
 def get_users_count():
@@ -1108,6 +1165,13 @@ def get_user_data(email):
     Enrolc = Enroll.query.filter_by(user=user.email).all()
     codes = Pay_code.query.filter_by(user=user.email).all()
     return jsonify({"user": user.serialize(), "enrolc": [enroll.serialize() for enroll in Enrolc], "codes": [code.serialize() for code in codes]})
+@app.route("/api/mas3od/get_user_data/<int:id>")
+def get_user_data_mas3od(id):
+    user = Users.query.get_or_404(id)
+    Enrolc = Enroll.query.filter_by(user=user.email).all()
+    codes = Pay_code.query.filter_by(user=user.email).all()
+    return jsonify({"user": user.serialize(), "enrolc": [enroll.serialize() for enroll in Enrolc], "codes": [code.serialize() for code in codes]})
+
 
 @app.route("/api/th/login", methods=['POST'])
 def ThLogin():
@@ -1128,15 +1192,180 @@ def get_all_notificashen():
     notification = Notification.query.all()
     return jsonify({"notification": [noti.serialize() for noti in notification]})
 
+@app.route("/api/th/add_course", methods=['POST'])
+def add_course_th():
+    data = request.json
+    name = data.get('name')
+    academic_year = data.get('academicYear')
+    academic_section = data.get('academicSection')
+    price = data.get('price')
+    is_free = data.get('isFree', False) 
+    banner_url = data.get('bannerUrl')
+    category = data.get('category')
+    added_by = 'admin'
 
+    new_course = Course(
+        name=name,
+        academic_year=academic_year,
+        academic_section=academic_section,
+        price=price,
+        is_free=is_free,
+        banner_url=banner_url,
+        category=category,
+        added_by=added_by
+    )
+
+    db.session.add(new_course)
+    db.session.commit()
+
+    return jsonify({"success": True})
+# api for add lesson json data
+@app.route("/api/th/add_lesson", methods=['POST'])
+def add_lesson_th():
+    data = request.json
+    name = data.get('name')
+    course_id = data.get('courseId')
+    iframeCode = data.get('iframeCode')
+    Ltype = data.get('Ltype')
+    addLesson(name,course_id,iframeCode,Ltype)
+    return jsonify({'success': True})
+
+# api for edit course information by id JSON data
+@app.route("/api/th/edit_course/<int:id>", methods=['POST'])
+def edit_course(id):
+    data = request.get_json()
+    course = Course.query.get(id)
+    if course:
+        course.name = data['name']
+        course.academic_year = data['academic_year']
+        course.academic_section = data['academic_section']
+        course.price = data['price']
+        course.is_free = data['is_free']
+        course.banner_url = data['banner_url']
+        course.category = data['category']
+        db.session.commit()
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False})
+
+# api for delete course by id and delete all lessons in this course
+@app.route("/api/th/delete_course/<int:id>")
+def delete_course(id):
+    course = Course.query.get(id)
+    if course:
+        lessons = Lesson.query.filter_by(course_id=id).all()
+        for lesson in lessons:
+            db.session.delete(lesson)
+        db.session.delete(course)
+        db.session.commit()
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False})
+
+# api for get all lessons in course by id
+@app.route("/api/th/get_lessons/<int:id>")
+def get_lessons(id):
+    lessons = Lesson.query.filter_by(course_id=id).all()
+    return jsonify({"lessons": [lesson.serialize() for lesson in lessons]})
+
+# api for edit lesson by id
+@app.route("/api/th/edit_lesson/<int:id>", methods=['POST'])
+def edit_lesson(id):
+    lesson = Lesson.query.get(id)
+    if lesson:
+        data = request.get_json()
+        lesson.name = data['name']
+        lesson.iframeCode = data['iframeCode']
+        lesson.Ltype = data['Ltype']
+        lesson.lessonTime = data['lessonTime']
+        db.session.commit()
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False})
+
+# api for delete lesson by id
+@app.route("/api/th/delete_lesson/<int:id>")
+def delete_lesson(id):
+    lesson = Lesson.query.get(id)
+    if lesson:
+        db.session.delete(lesson)
+        db.session.commit()
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False})
+
+# api for enroll courses by email and course id
+@app.route("/api/th/enroll_course", methods=['POST'])
+def enroll_course():
+    data = request.get_json()
+    email = data['email']
+    course_id = data['course_id']
+    enroll = Enroll(
+        user=email,
+        course=course_id
+    )
+    db.session.add(enroll)
+    db.session.commit()
+    return jsonify({"success": True})
+@app.route("/api/th/edit_user/<int:id>", methods=['POST'])
+def edit_user(id):
+    user = Users.query.get(id)
+    if user:
+        data = request.get_json()
+        user.name = data['name']
+        user.email = data['email']
+        user.city = data['city']
+        user.age = data['age']
+        user.phone_number = data['phone_number']
+        user.father_number = data['father_number']
+        user.birthdate = data['birthdate']
+        user.academic_year = data['academic_year']
+        user.academic_section = data['academic_section']
+        user.profile_img = data['profile_img']
+        db.session.commit()
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False})
+# delete user by id
+@app.route("/api/th/delete_user/<int:id>")
+def delete_user(id):
+    user = Users.query.get(id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False})
+# change the user password by id
+@app.route("/api/th/change_password/<int:id>", methods=['POST'])
+def change_password(id):
+    user = Users.query.get(id)
+    if user:
+        data = request.get_json()
+        user.password = data['password']
+        db.session.commit()
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False})
+@app.route("/api/th/send_notification/<int:id>", methods=['POST'])
+def send_notification(id):
+    data = request.get_json()
+    notificashen = data['notificashen']
+    type = data['type']
+    url = data['url']
+    addNotificashen(id,notificashen,type,url)
+    return jsonify({"success": True})
 # ========================== Error Pages ==========================
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('web/error/404.html'), 404
-# 5xx errors
+    username = session.get('user')
+    if username:
+        return render_template('web/error/404.html'), 404
+    else:
+        return redirect('/')
 @app.errorhandler(500)
 def internal_server_error(e):
-    return render_template('web/error/500.html'), 500
+    return redirect('/logout')
 # ======================== Servir Site ==========================
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 3030))

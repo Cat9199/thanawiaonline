@@ -17,10 +17,37 @@
         </a>
     </div>
     <div class="account-category">
-        <h3>{{user.academic_section}} </h3>
-        <a href="settings-edit.html">
-            <img src="/asseds/icons/tabler_edit.svg" alt="" class="icon">
-        </a>
+
+        <div class="info-user" style="margin-top: 20px; background-color: var(--neutral-10, #F6F8FC); padding: 10px; border-radius: 10px;width: 120%;">
+
+            <p style="font-size: 1.2rem; color: #333;"><strong>الاسم :</strong><br>
+                <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;">{{user.name}}</div>
+            </p>
+
+            <p style="font-size: 1.2rem; color: #333;"><strong>القسم :</strong><br>
+                <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;"> {{ user.academic_section }}</div>
+            </p>
+
+
+            <p style="font-size: 1.2rem; color: #333;"><strong>الايميل :</strong><br>
+                <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;">{{ user.email }}</div>
+            </p>
+            <p style="font-size: 1.2rem; color: #333;"><strong>السن :</strong><br>
+                <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;"> {{ user.age }}سنة --{{ user.birthdate }}</div>
+            </p>
+            <p style="font-size: 1.2rem; color: #333;"><strong>رقم الطالب :</strong><br>
+
+                <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%; ">
+                    {{ user.phone_number }}
+                </div>
+            </p>
+            <p style="font-size: 1.2rem; color: #333;"><strong>رقم ولي الامر: </strong><br>
+                <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;">{{ user.father_number }}</div>
+            </p>
+            <p style="font-size: 1.2rem; color: #333;"><strong>تاريخ انشاء الحساب :</strong> <br>
+                <div style="color: #333; background-color: var(--neutral-8); padding: 4px 8px; border-radius: 5px;width: 100%;"> {{ user.created_at }}</div>
+            </p>
+        </div>
     </div>
     <a class='edit'>تعديل معلومات الحساب</a>
     <button class="delete">حذف الحساب</button>

@@ -133,6 +133,7 @@
 
 .courses .course .course-info {
     padding: 20px;
+    color: var(--neutral-3, #262F44);
 }
 
 .courses .course .course-price {
@@ -142,7 +143,7 @@
     align-items: center;
 }
 
-.courses .course .course-price a {
+.courses .course .course-price div {
     border-radius: 26px;
     background: var(--blue-3, #2E6FF4);
     padding: 0px 20px;
@@ -152,11 +153,11 @@
     transition: 0.3s ease-in-out;
 }
 
-.courses .course .course-price a:hover {
+.courses .course .course-price div:hover {
     opacity: 0.8;
 }
 
-.courses .course .course-price span {
+.courses .course .course-price p {
     color: var(--neutral-3, #262F44);
     font-size: 16px;
     font-weight: 700;

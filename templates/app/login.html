@@ -2,6 +2,23 @@
 <html lang="ar">
 
 <head>
+    <!-- Hotjar Tracking Code for thanawionline -->
+    <script>
+        (function(h, o, t, j, a, r) {
+            h.hj = h.hj || function() {
+                (h.hj.q = h.hj.q || []).push(arguments)
+            };
+            h._hjSettings = {
+                hjid: 3911671,
+                hjsv: 6
+            };
+            a = o.getElementsByTagName('head')[0];
+            r = o.createElement('script');
+            r.async = 1;
+            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول</title>
@@ -21,17 +38,27 @@
         <div class="login-container">
             <h2>سجل الدخول الى حسابك</h2>
             <div class="content">
+                {% if session.is_mobile and session.is_webview %} {% else %}
                 <a href="/logingoogle" class="google-login">
                     <h3>تسجيل الدخول باستخدام جوجل</h3>
                     <div class="icon">
                         <img src="{{ url_for('static',filename='img/google-icon.svg') }}" alt="">
                     </div>
+                    {% endif %}
                 </a>
                 <div class="line">
                     <span>او ادخل لحسابك باستخدام</span>
                 </div>
+                {% if error %}
+                <p id="message" style="color: red; display: block;">{{ error }} {% if error == 'كلمة المرور خاطئة' %}
+                    <a href="https://wa.me/201011530060?text=Hi,%20I%20am%{{username}}.%20I%20use%20Ahmed%20Malik%20Academy.%20Forgot%20password" target="_blank">تواصل مع الدعم</a> {% endif %}
+                </p>
+                {% endif %}
                 <form action="/login" method="POST" class="form-login">
-                    <input type="text" name="email" placeholder=" اكتب ايميلك هنا او رقم التليفون" />
+                    {% if username %}
+                    <input type="text" name="email" value="{{username}}" placeholder="اكتب ايميلك هنا او رقم التليفون" /> {% else %}
+                    <input type="text" name="email" placeholder=" اكتب ايميلك هنا او رقم التليفون" /> {% endif %}
+
                     <input type="password" name="password" placeholder="اكتب كلمة السر هنا" />
                     <a href="/forgetpasswored">نسيت كلمة السر؟ <span>دوس هنا</span></a>
                     <input type="submit" value="تسجيل الدخول" />
